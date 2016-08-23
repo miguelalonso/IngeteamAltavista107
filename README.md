@@ -1,4 +1,4 @@
-# IngeteamAltsvista107
+# Ingeteam Altavista107
 Monitorización del inversor conectado a red de Altavista 107
 
 Consta de dos partes: un arduino nano y un Nodemcu
