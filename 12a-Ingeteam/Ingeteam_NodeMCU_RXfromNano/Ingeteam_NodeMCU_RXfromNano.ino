@@ -507,6 +507,10 @@ void chequeaIngeteam(){
   else{
     datosOK=true;
     }
+    
+    if (mydata.PAC>4000 ){
+      datosOK=false;
+     }
   }
 
 
@@ -522,6 +526,8 @@ void setup() {
   Serial.print( "tamano:");
   int tam=sizeof(mydata);
   Serial.print( tam);
+  Serial.print( "Esperando 2 minutos");
+  delay(120000); //espera dos minutos para dar tiempo al router a coger wifi.
   
   wifiManager.setBreakAfterConfig(true);
   //reset settings - for testing
@@ -582,7 +588,34 @@ void loop() {
  }
   
   if (debug==1)  {   imprimirdatos();  }
- 
+
+ //4. wifi reconnect
+  if (WiFi.status() != WL_CONNECTED){
+      WIFI_Connect();
+  } 
   
 }
 
+
+void WIFI_Connect() // por si acaso se desconecta el router, volver a conectar
+{
+    delay(3000);
+    wifiManager.setBreakAfterConfig(true);
+    if (!wifiManager.autoConnect("NodeMCU", "A12345678")) {
+      Serial.println("failed to connect, we should reset as see if it connects");
+      delay(3000);
+      ESP.reset();
+      delay(5000);
+    }
+  Serial.println("connected...yeey :)");
+  Serial.println("local ip");
+  Serial.println(WiFi.localIP());
+  /////////////////////////////////////////server
+  server.begin();
+  Serial.println("Server started");
+  // Print the IP address
+  Serial.print("Use this URL to connect: ");
+  Serial.print("http://");
+  Serial.print(WiFi.localIP());
+  Serial.println("/");
+} 
